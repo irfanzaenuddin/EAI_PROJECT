@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:tns="http://example.com/timeattendance"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             name="TimeAttendanceService"
+             targetNamespace="http://example.com/timeattendance"
+             xmlns:soapenc="http://schemas.xmlsoap.org/wsdl/soap/encoding/">
+
+    <types>
+        <xsd:schema targetNamespace="http://example.com/timeattendance">
+            <xsd:complexType name="TimeAttendanceData">
+                <xsd:sequence>
+                    <xsd:element name="employeeId" type="xsd:int"/>
+                    <xsd:element name="date" type="xsd:date"/>
+                    <xsd:element name="clockInTime" type="xsd:time"/>
+                    <xsd:element name="clockOutTime" type="xsd:time"/>
+                </xsd:sequence>
+            </xsd:complexType>
+
+            <xsd:element name="GetEmployeeAttendanceByDateRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="employeeId" type="xsd:int"/>
+                        <xsd:element name="fromDate" type="xsd:date"/>
+                        <xsd:element name="toDate" type="xsd:date"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="GetEmployeeAttendanceByDateResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="attendanceData" type="tns:TimeAttendanceData" minOccurs="0" maxOccurs="unbounded"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
+    </types>
+
+    <message name="GetEmployeeAttendanceByDateRequest">
+        <part name="parameters" element="tns:GetEmployeeAttendanceByDateRequest"/>
+    </message>
+    
+    <message name="GetEmployeeAttendanceByDateResponse">
+        <part name="parameters" element="tns:GetEmployeeAttendanceByDateResponse"/>
+    </message>
+
+    <portType name="TimeAttendancePortType">
+        <operation name="GetEmployeeAttendanceByDate">
+            <input message="tns:GetEmployeeAttendanceByDateRequest"/>
+            <output message="tns:GetEmployeeAttendanceByDateResponse"/>
+        </operation>
+    </portType>
+
+    <binding name="TimeAttendanceBinding" type="tns:TimeAttendancePortType">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="GetEmployeeAttendanceByDate">
+            <soap:operation soapAction="http://example.com/timeattendance/GetEmployeeAttendanceByDate"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+
+    <service name="TimeAttendanceService">
+        <port name="TimeAttendancePort" binding="tns:TimeAttendanceBinding">
+            <soap:address location="http://example.com/timeattendance"/>
+        </port>
+    </service>
+</definitions>
